@@ -8,7 +8,6 @@ add_library(cmulate
     game_loop.cpp
     location_system.cpp
     grid.cpp
-    tile.cpp
     world.cpp
     )
 target_compile_options(cmulate PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)

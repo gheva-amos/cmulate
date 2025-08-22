@@ -1,7 +1,7 @@
 #ifndef CMULATE_WORLD_H__
 #define CMULATE_WORLD_H__
 #include <vector>
-#include "tile.h"
+#include "components/tile.h"
 #include "grid.h"
 #include "data_types.h"
 #include <random>

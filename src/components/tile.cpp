@@ -1,4 +1,4 @@
-#include "tile.h"
+#include "components/tile.h"
 
 namespace cmulate
 {
