@@ -7,7 +7,6 @@ add_library(cmulate
     entity_manager.cpp
     game_loop.cpp
     location_system.cpp
-    grid.cpp
     world.cpp
     )
 target_compile_options(cmulate PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)

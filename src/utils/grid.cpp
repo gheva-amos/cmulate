@@ -1,4 +1,4 @@
-#include "grid.h"
+#include "utils/grid.h"
 #include <algorithm>
 
 namespace cmulate

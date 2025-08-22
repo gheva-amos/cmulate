@@ -2,7 +2,7 @@
 #define CMULATE_WORLD_H__
 #include <vector>
 #include "components/tile.h"
-#include "grid.h"
+#include "utils/grid.h"
 #include "data_types.h"
 #include <random>
 

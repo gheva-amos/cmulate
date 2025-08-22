@@ -3,4 +3,5 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_library(utils
     atom_table.cpp
+    grid.cpp
     )
