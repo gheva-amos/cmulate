@@ -2,7 +2,7 @@
 #define CMULATE_ENTITY_MANAGER_H__
 #include "utils/atom_table.h"
 #include "components/position.h"
-#include "velocity.h"
+#include "components/velocity.h"
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>

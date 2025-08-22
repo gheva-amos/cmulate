@@ -1,4 +1,4 @@
-#include "velocity.h"
+#include "components/velocity.h"
 
 namespace cmulate
 {

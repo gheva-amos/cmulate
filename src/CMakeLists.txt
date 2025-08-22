@@ -5,7 +5,6 @@ add_subdirectory(utils)
 add_subdirectory(components)
 add_library(cmulate
     entity_manager.cpp
-    velocity.cpp
     game_loop.cpp
     location_system.cpp
     grid.cpp

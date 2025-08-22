@@ -3,4 +3,5 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_library(components
     position.cpp
+    velocity.cpp
     )

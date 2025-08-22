@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "velocity.h"
+#include "components/velocity.h"
 
 using namespace cmulate;
 
