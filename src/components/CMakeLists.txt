@@ -4,5 +4,7 @@ set(CMAKE_CXX_STANDARD 23)
 add_library(components
     position.cpp
     velocity.cpp
+    acceleration.cpp
     tile.cpp
     )
+target_compile_options(components PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
