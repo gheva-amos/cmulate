@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "position.h"
+#include "components/position.h"
 
 using namespace cmulate;
 
