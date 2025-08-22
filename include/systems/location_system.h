@@ -1,7 +1,7 @@
 #ifndef CMULATE_LOCATION_SYSTEM_H__
 #define CMULATE_LOCATION_SYSTEM_H__
 #include <memory>
-#include "entity_manager.h"
+#include "entities/entity_manager.h"
 #include "world.h"
 
 namespace cmulate

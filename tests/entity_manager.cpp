@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "entity_manager.h"
+#include "entities/entity_manager.h"
 
 using namespace cmulate;
 

@@ -2,7 +2,7 @@
 #define CMULATE_GRID_H__
 #include <unordered_map>
 #include <vector>
-#include "entity_manager.h"
+#include "entities/entity_manager.h"
 #include "data_types.h"
 
 namespace cmulate

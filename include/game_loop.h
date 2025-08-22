@@ -1,6 +1,6 @@
 #ifndef CMULATE_GAME_LOOP_H__
 #define CMULATE_GAME_LOOP_H__
-#include "entity_manager.h"
+#include "entities/entity_manager.h"
 #include "systems/location_system.h"
 #include "world.h"
 #include <chrono>
