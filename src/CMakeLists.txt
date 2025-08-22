@@ -3,14 +3,14 @@ set(CMAKE_CXX_STANDARD 23)
 
 add_subdirectory(utils)
 add_subdirectory(components)
+add_subdirectory(systems)
 add_library(cmulate
     entity_manager.cpp
     game_loop.cpp
-    location_system.cpp
     world.cpp
     )
 target_compile_options(cmulate PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
-target_link_libraries(cmulate PUBLIC utils components)
+target_link_libraries(cmulate PUBLIC utils components systems)
 
 add_executable(SFMLBuildTest sfml.cpp)
 target_compile_options(SFMLBuildTest PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
