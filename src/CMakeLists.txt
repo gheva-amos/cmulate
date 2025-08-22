@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 23)
 
+add_subdirectory(utils)
 add_library(cmulate
-    atom_table.cpp
     entity_manager.cpp
     position.cpp
     velocity.cpp
@@ -13,6 +13,7 @@ add_library(cmulate
     world.cpp
     )
 target_compile_options(cmulate PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
+target_link_libraries(cmulate PUBLIC utils)
 
 add_executable(SFMLBuildTest sfml.cpp)
 target_compile_options(SFMLBuildTest PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)

@@ -1,6 +1,6 @@
 #ifndef CMULATE_ENTITY_MANAGER_H__
 #define CMULATE_ENTITY_MANAGER_H__
-#include "atom_table.h"
+#include "utils/atom_table.h"
 #include "position.h"
 #include "velocity.h"
 #include <vector>

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "atom_table.h"
+#include "utils/atom_table.h"
 
 using namespace cmulate;
 TEST(AtomeTableBasics, CMulateTests)

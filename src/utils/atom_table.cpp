@@ -1,4 +1,4 @@
-#include "atom_table.h"
+#include "utils/atom_table.h"
 
 namespace cmulate
 {
