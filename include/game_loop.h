@@ -17,6 +17,7 @@ public:
   using Tick = std::chrono::time_point<Clock>;
   using Duration = std::chrono::duration<float>;
   GameLoop(size_t width, size_t height, size_t resolution, DataType gravity=9.81f);
+  GameLoop(std::unique_ptr<EntityManager> em, size_t width, size_t height, size_t resolution, DataType gravity=9.81f);
   void operator()();
   void tick();
   void limit(float time);

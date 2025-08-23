@@ -12,6 +12,15 @@ GameLoop::GameLoop(size_t width, size_t height, size_t resolution, DataType grav
 {
 }
 
+GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
+    size_t width, size_t height, size_t resolution, DataType gravity) :
+  entities_{std::move(em)},
+  location_system_{std::make_unique<LocationSystem>()},
+  physics_system_{std::make_unique<PhysicsSystem>(gravity)},
+  world_{std::make_unique<World>(width, height, resolution)}
+{
+}
+
 void GameLoop::operator()()
 {
   last_ = start_ = Clock::now();
@@ -39,7 +48,7 @@ void GameLoop::tick()
   size_t j{0};
   for (auto entity : entities_->entities())
   {
-    DBG_MSG("looping over entitie") << entity << std::endl;
+    DBG_MSG("looping over entitie ") << entity << std::endl;
     physics_system_->update(entities_, entity, delta_time);
     location_system_->update(entities_, world_, entity, delta_time);
     ++j;
@@ -48,6 +57,7 @@ void GameLoop::tick()
       physics_system_->handle_collisions(entities_, entity, entities_->at(k));
     }
   }
+  entities_->process_triggers();
   last_ = now_;
 }
 
