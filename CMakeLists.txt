@@ -27,6 +27,24 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
+set(SDL_X11 ON  CACHE BOOL "" FORCE)
+set(SDL_WAYLAND OFF CACHE BOOL "" FORCE) # ON if you installed Wayland deps
+set(SDL_ALSA ON CACHE BOOL "" FORCE)
+set(SDL_PULSEAUDIO OFF CACHE BOOL "" FORCE)
+set(SDL_PIPEWIRE OFF CACHE BOOL "" FORCE)
+set(HAVE_RPI OFF CACHE BOOL "" FORCE)
+set(SDL_RPI  OFF CACHE BOOL "" FORCE)
+set(SDL_TEST OFF CACHE BOOL "" FORCE)
+set(SDL_SHARED ON CACHE BOOL "" FORCE)
+set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    SDL2
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+    GIT_TAG release-2.30.3
+    )
+FetchContent_MakeAvailable(SDL2)
+
 add_subdirectory(src)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
