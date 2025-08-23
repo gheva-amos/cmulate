@@ -4,15 +4,16 @@
 #include "components/position.h"
 #include "components/velocity.h"
 #include "components/acceleration.h"
+#include "event/trigger.h"
+#include <queue>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
+#include <memory>
 
 namespace cmulate
 {
-
-class AtomTable;
 
 class EntityManager
 {
@@ -20,6 +21,7 @@ public:
   using Entity = AtomTable::Atom;
   using Size = std::pair<DataType, DataType>;
   EntityManager();
+  virtual ~EntityManager() = default;
   const std::string& entity_name(Entity entity);
   Entity add_entity(const std::string& name);
   Entity operator[](size_t index) const;
@@ -42,6 +44,10 @@ public:
   bool speed_entity(Entity entity, float dt);
   bool collide(Entity entity, Entity other);
   void apply_gravity(DataType gravity, DataType dt);
+
+  void add_trigger(std::unique_ptr<Trigger> trigger);
+  void process_triggers();
+  virtual void handle_collision(Entity op1, Entity op2);
 private:
   AtomTable atoms_;
   std::vector<Entity> entities_;
@@ -50,6 +56,7 @@ private:
   std::unordered_map<Entity, Velocity> velocities_;
   std::unordered_map<Entity, Acceleration> accelerations_;
   std::unordered_map<Entity, std::pair<DataType, DataType>> sizes_;
+  std::queue<std::unique_ptr<Trigger>> triggers_;
 };
 
 } // namespace

@@ -126,4 +126,23 @@ void EntityManager::apply_gravity(DataType gravity, DataType dt)
   }
 }
 
+void EntityManager::add_trigger(std::unique_ptr<Trigger> trigger)
+{
+  triggers_.push(std::move(trigger));
+}
+
+void EntityManager::process_triggers()
+{
+  while (!triggers_.empty())
+  {
+    auto trigger{std::move(triggers_.front())};
+    triggers_.pop();
+    trigger->trigger();
+  }
+}
+
+void EntityManager::handle_collision(Entity op1, Entity op2)
+{
+}
+
 } // namespace

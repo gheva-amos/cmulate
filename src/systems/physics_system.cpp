@@ -3,6 +3,27 @@
 namespace cmulate
 {
 
+class CollisionTrigger : public Trigger
+{
+public:
+  CollisionTrigger(
+    std::unique_ptr<EntityManager>& em,
+    EntityManager::Entity op1,
+    EntityManager::Entity op2) :
+    entities_{em}, op1_{op1}, op2_{op2}
+  {
+  }
+protected:
+  virtual void do_trigger(Functor& func) override
+  {
+    entities_->handle_collision(op1_, op2_);
+  }
+private:
+  std::unique_ptr<EntityManager>& entities_;
+  EntityManager::Entity op1_;
+  EntityManager::Entity op2_;
+};
+
 PhysicsSystem::PhysicsSystem(DataType gravity) :
   gravity_{gravity}
 {
@@ -24,6 +45,7 @@ void PhysicsSystem::handle_collisions(std::unique_ptr<EntityManager>& entities,
 {
   if (entities->collide(entity, other))
   {
+    entities->add_trigger(std::make_unique<CollisionTrigger>(entities, entity, other));
   }
 }
 
