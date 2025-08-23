@@ -50,3 +50,17 @@ TEST(LocationTests, CMulateTests)
   EXPECT_NEAR(p.y(), dy, 1e-9);
   EXPECT_NEAR(p.z(), dz, 1e-9);
 }
+
+TEST(EntityManagerTestSizes, CMulateTests)
+{
+  EntityManager em;
+  auto id = em.add_entity("entitie");
+  EntityManager::Size& size = em.size(id);
+  DataType width{5.5f}, height{3.4f};
+  size.first = width;
+  size.second = height;
+
+  EXPECT_NEAR(em.size(id).first, width, 1e-9);
+  EXPECT_NEAR(em.size(id).second, height, 1e-9);
+}
+

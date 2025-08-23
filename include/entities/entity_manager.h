@@ -3,9 +3,11 @@
 #include "utils/atom_table.h"
 #include "components/position.h"
 #include "components/velocity.h"
+#include "components/acceleration.h"
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 
 namespace cmulate
 {
@@ -16,22 +18,38 @@ class EntityManager
 {
 public:
   using Entity = AtomTable::Atom;
+  using Size = std::pair<DataType, DataType>;
   EntityManager();
   const std::string& entity_name(Entity entity);
   Entity add_entity(const std::string& name);
+  Entity operator[](size_t index) const;
+  Entity at(size_t index) const;
 
-  std::vector<Entity> entities() { return entities_; }
-  std::unordered_map<Entity, Position> positions() { return positions_; }
+  std::vector<Entity>& entities() { return entities_; }
+  std::unordered_map<Entity, Position>& positions() { return positions_; }
+  std::unordered_map<Entity, Acceleration>& accelerations() { return accelerations_; }
   Position& location(Entity entity);
   Velocity& speed(Entity entity);
+  Acceleration& acceleration(Entity entity);
+  Size& size(Entity entity);
+
   Position location(Entity entity) const;
   Velocity speed(Entity entity) const;
+  Acceleration acceleration(Entity entity) const;
+  Size size(Entity entity) const;
+
+  bool move_entity(Entity entity, float dt, Position& ret);
+  bool speed_entity(Entity entity, float dt);
+  bool collide(Entity entity, Entity other);
+  void apply_gravity(DataType gravity, DataType dt);
 private:
   AtomTable atoms_;
   std::vector<Entity> entities_;
   std::unordered_set<Entity> all_entities_;
   std::unordered_map<Entity, Position> positions_;
   std::unordered_map<Entity, Velocity> velocities_;
+  std::unordered_map<Entity, Acceleration> accelerations_;
+  std::unordered_map<Entity, std::pair<DataType, DataType>> sizes_;
 };
 
 } // namespace
