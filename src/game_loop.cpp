@@ -4,9 +4,10 @@
 namespace cmulate
 {
 
-GameLoop::GameLoop(size_t width, size_t height, size_t resolution) :
+GameLoop::GameLoop(size_t width, size_t height, size_t resolution, DataType gravity) :
   entities_{std::make_unique<EntityManager>()},
   location_system_{std::make_unique<LocationSystem>()},
+  physics_system_{std::make_unique<PhysicsSystem>(gravity)},
   world_{std::make_unique<World>(width, height, resolution)}
 {
 }
@@ -34,10 +35,18 @@ void GameLoop::tick()
   Duration dt = now_ - last_;
   float delta_time = dt.count();
   world_->update(delta_time);
+  physics_system_->apply_gravity(entities_, delta_time);
+  size_t j{0};
   for (auto entity : entities_->entities())
   {
     DBG_MSG("looping over entitie") << entity << std::endl;
+    physics_system_->update(entities_, entity, delta_time);
     location_system_->update(entities_, world_, entity, delta_time);
+    ++j;
+    for (size_t k{j}; k < entities_->entities().size(); ++k)
+    {
+      physics_system_->handle_collisions(entities_, entity, entities_->at(k));
+    }
   }
   last_ = now_;
 }
