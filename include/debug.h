@@ -9,33 +9,12 @@
 namespace cmulate
 {
 
+std::ostream& get_log_stream(bool enabled);
 #ifdef DEBUG
-class DebugPrinter
-{
-public:
-  DebugPrinter() : out{std::cout} {}
-  std::ostream& operator<<(const std::string& str)
-  {
-    return out << str;
-  }
-private:
-  std::ostream& out;
-};
+#define DBG_MSG(message) get_log_stream(true) << __FILE__ << ':' << __LINE__ << (message)
 #else
-class DebugPrinter // For production NOOP
-{
-public:
-  DebugPrinter() {}
-  std::ostream& operator<<(const std::string& str)
-  {
-    out.clear();
-    return out;
-  }
-private:
-  std::stringstream out;
-};
+#define DBG_MSG(message) get_log_stream(false) << __FILE__ << ':' << __LINE__ << (message)
 #endif
 } // namespace
 
-#define DBG_MSG(message) (DebugPrinter() << __FILE__ << ':' << __LINE__ << message)
 #endif // CMULATE_DEBUG_H__
