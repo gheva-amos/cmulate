@@ -1,7 +1,15 @@
 #include "systems/physics_system.h"
+#include "debug.h"
 
 namespace cmulate
 {
+
+class CollisionFunctor : public Functor
+{
+public:
+  virtual void operator()() {}
+  virtual std::string hash_seed() const override { return "Collision functor"; }
+};
 
 class CollisionTrigger : public Trigger
 {
@@ -12,6 +20,7 @@ public:
     EntityManager::Entity op2) :
     entities_{em}, op1_{op1}, op2_{op2}
   {
+    add_function(func_);
   }
 protected:
   virtual void do_trigger(Functor& func) override
@@ -22,6 +31,7 @@ private:
   std::unique_ptr<EntityManager>& entities_;
   EntityManager::Entity op1_;
   EntityManager::Entity op2_;
+  CollisionFunctor func_;
 };
 
 PhysicsSystem::PhysicsSystem(DataType gravity) :
