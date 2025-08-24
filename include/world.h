@@ -18,9 +18,11 @@ public:
   Tiles operator[](size_t idx) const;
   Tiles& operator[](size_t idx);
   static World random(size_t width, size_t height, size_t resolution);
+  static void random(World& world);
   void update(float delta_time);
   void move_entity(EntityManager::Entity entity, DataType x, DataType y);
   void add_entity(EntityManager::Entity entity, DataType x, DataType y);
+  virtual void init();
 private:
   size_t width_;
   size_t height_;

@@ -42,29 +42,39 @@ World World::random(size_t width, size_t height, size_t resolution)
 {
   std::mt19937 gen{rd()};
   World ret{width, height, resolution};
-  for (size_t h{0}; h < height; ++h)
+  random(ret);
+  return ret;
+}
+
+void World::random(World& world)
+{
+  std::mt19937 gen{rd()};
+  for (size_t h{0}; h < world.height_; ++h)
   {
-    for (size_t w{0}; w < width; ++w)
+    for (size_t w{0}; w < world.width_; ++w)
     {
       DataType rand{distribution(gen)};
       if (rand < 0.7f)
       {
-        ret[h][w].type() = Tile::Type::grass;
-        ret[h][w].can_walk_through() = true;
+        world[h][w].type() = Tile::Type::grass;
+        world[h][w].can_walk_through() = true;
       }
       else if (rand < 0.9f)
       {
-        ret[h][w].type() = Tile::Type::water;
-        ret[h][w].can_walk_through() = false;
+        world[h][w].type() = Tile::Type::water;
+        world[h][w].can_walk_through() = false;
       }
       else
       {
-        ret[h][w].type() = Tile::Type::mountain;
-        ret[h][w].can_walk_through() = false;
+        world[h][w].type() = Tile::Type::mountain;
+        world[h][w].can_walk_through() = false;
       }
     }
   }
-  return ret;
+}
+
+void World::init()
+{
 }
 
 } // namespace
