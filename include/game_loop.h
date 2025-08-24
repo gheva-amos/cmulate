@@ -3,6 +3,7 @@
 #include "entities/entity_manager.h"
 #include "systems/location_system.h"
 #include "systems/physics_system.h"
+#include "render/render.h"
 #include "world.h"
 #include <chrono>
 #include <memory>
@@ -21,11 +22,15 @@ public:
   void operator()();
   void tick();
   void limit(float time);
+
+  EntityManager::Entity add_entity(const std::string& name, Position p, Color c, std::pair<DataType, DataType>& size);
+  std::unique_ptr<EntityManager>& entities();
 private:
   std::unique_ptr<EntityManager> entities_;
   std::unique_ptr<LocationSystem> location_system_;
   std::unique_ptr<PhysicsSystem> physics_system_;
   std::unique_ptr<World> world_;
+  std::unique_ptr<Render> renderer_;
   Tick start_;
   Tick last_;
   Tick now_;

@@ -1,5 +1,7 @@
 #include "game_loop.h"
 #include "debug.h"
+#include "render/sdl.h"
+#include <thread>
 
 namespace cmulate
 {
@@ -8,7 +10,8 @@ GameLoop::GameLoop(size_t width, size_t height, size_t resolution, DataType grav
   entities_{std::make_unique<EntityManager>()},
   location_system_{std::make_unique<LocationSystem>()},
   physics_system_{std::make_unique<PhysicsSystem>(gravity)},
-  world_{std::make_unique<World>(width, height, resolution)}
+  world_{std::make_unique<World>(width, height, resolution)},
+  renderer_{std::make_unique<SDLRender>("CMulate")}
 {
 }
 
@@ -17,7 +20,8 @@ GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
   entities_{std::move(em)},
   location_system_{std::make_unique<LocationSystem>()},
   physics_system_{std::make_unique<PhysicsSystem>(gravity)},
-  world_{std::make_unique<World>(width, height, resolution)}
+  world_{std::make_unique<World>(width, height, resolution)},
+  renderer_{std::make_unique<SDLRender>("CMulate")}
 {
 }
 
@@ -35,6 +39,8 @@ void GameLoop::operator()()
         break;
       }
     }
+    auto wake = now_ + std::chrono::milliseconds(16);
+    std::this_thread::sleep_until(wake);
   }
 }
 
@@ -58,6 +64,8 @@ void GameLoop::tick()
     }
   }
   entities_->process_triggers();
+  entities_->render(renderer_.get());
+  renderer_->render();
   last_ = now_;
 }
 
@@ -65,6 +73,22 @@ void GameLoop::limit(float time)
 {
   limited_ = true;
   total_time_ = Duration(time);
+}
+
+EntityManager::Entity GameLoop::add_entity(const std::string& name, Position p, Color c,
+    std::pair<DataType, DataType>& size)
+{
+  auto id = entities_->add_entity(name);
+  entities_->color(id) = c;
+  entities_->size(id).first = size.first;
+  entities_->size(id).second = size.second;
+  entities_->location(id) = p;
+  return id;
+}
+
+std::unique_ptr<EntityManager>& GameLoop::entities()
+{
+  return entities_;
 }
 
 } // namespace
