@@ -7,6 +7,8 @@ add_subdirectory(components)
 add_subdirectory(systems)
 add_subdirectory(entities)
 add_subdirectory(event)
+add_subdirectory(graphics)
+add_subdirectory(render)
 add_library(cmulate
     game_loop.cpp
     world.cpp
