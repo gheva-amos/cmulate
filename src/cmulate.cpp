@@ -5,6 +5,8 @@
 #include "game_loop.h"
 #include "components/velocity.h"
 #include "components/acceleration.h"
+#define DEBUG
+#include "debug.h"
 
 using namespace cmulate;
 
@@ -40,7 +42,7 @@ private:
 
 int main()
 {
-  CMulateLoop loop(std::make_unique<CMulateEntities>(3), 10, 10, 2, 3.1);
+  CMulateLoop loop(std::make_unique<CMulateEntities>(12), 10, 10, 2, 3.1);
   GameLoop& looper{loop};
 
   looper.limit(10.0f);
@@ -85,6 +87,7 @@ std::string CMulateEntities::random_string(size_t len)
 
 void CMulateEntities::handle_collision(Entity op1, Entity op2)
 {
+  DBG_MSG("Collision ") << entity_name(op1) << ' ' << entity_name(op2) << std::endl;
 }
 
 void CMulateEntities::init()
