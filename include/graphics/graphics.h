@@ -11,8 +11,9 @@ class Graphics
 {
 public:
   virtual ~Graphics() = default;
-  void render(Render* renderer);
+  virtual void render(Render* renderer);
   void set_color(Color c);
+  Color color() { return color_; }
 protected:
   virtual void do_render(Render* renderer) = 0;
   Color color_{0, 0, 0, 255};

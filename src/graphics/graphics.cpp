@@ -1,5 +1,6 @@
 #include "graphics/graphics.h"
 #include "render/render.h"
+#include "debug.h"
 
 namespace cmulate
 {
