@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <sstream>
+#include <cctype>
 #include "game_loop.h"
 #include "components/velocity.h"
 #include "components/acceleration.h"
@@ -73,7 +74,11 @@ std::string CMulateEntities::random_string(size_t len)
   std::stringstream ss;
   for (size_t i{0}; i < len; ++i)
   {
-    ss << str_d(gen);
+    char c(str_d(gen));
+    if (std::isalnum(c))
+    {
+      ss << c;
+    }
   }
   return ss.str();
 }
