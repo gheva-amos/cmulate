@@ -1,0 +1,10 @@
+cmake_minimum_required(VERSION 3.14)
+set(CMAKE_CXX_STANDARD 23)
+
+add_library(graphics
+    line.cpp
+    rect.cpp
+    color.cpp
+    graphics.cpp
+    )
+target_compile_options(graphics PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
