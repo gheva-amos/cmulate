@@ -23,6 +23,13 @@ void Render::render_entities()
   {
     rect.render(this);
   }
+  lines_.clear();
+  rects_.clear();
+}
+
+void Render::add_rect(Rect& r)
+{
+  rects_.push_back(r);
 }
 
 } // namespace
