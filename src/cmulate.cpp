@@ -1,26 +1,114 @@
 #include <iostream>
+#include <random>
+#include <sstream>
 #include "game_loop.h"
 #include "components/velocity.h"
 #include "components/acceleration.h"
 
 using namespace cmulate;
 
+class CMulateLoop : public GameLoop
+{
+public:
+  CMulateLoop(std::unique_ptr<EntityManager> entities, size_t width, size_t height, size_t resolution, DataType gravity=9.81f) :
+    GameLoop{std::move(entities), width, height, resolution, gravity}
+  {
+    init();
+  }
+  virtual void init() override;
+private:
+};
+
+class CMulateEntities : public EntityManager
+{
+public:
+  CMulateEntities(size_t entity_count);
+  virtual void handle_collision(Entity op1, Entity op2) override;
+  virtual void init() override;
+private:
+  size_t entity_count_;
+  static std::string random_string(size_t len);
+  static std::random_device rd;
+  static std::uniform_real_distribution<DataType> position_d;
+  static std::uniform_real_distribution<DataType> acceleration_d;
+  static std::uniform_real_distribution<DataType> size_d;
+  static std::uniform_real_distribution<DataType> velo_d;
+  static std::uniform_int_distribution<int> idistribution;
+  static std::uniform_int_distribution<char> str_d;
+};
+
 int main()
 {
-  GameLoop looper(10, 10, 2, 3.1);
-  Position p{50.0, 50.0, 0.0};
-  Color c{0, 0, 0, 255};
-  std::pair<float, float> size = std::make_pair(100, 50);
+  CMulateLoop loop(std::make_unique<CMulateEntities>(3), 10, 10, 2, 3.1);
+  GameLoop& looper{loop};
 
-  auto id = looper.add_entity("bear", p, c, size);
-  Velocity& speed{looper.entities()->speed(id)};
-  speed.dx() = 2;
-  speed.dy() = 5;
-  Acceleration& acceleration{looper.entities()->acceleration(id)};
-  acceleration.ax() = 2;
-  acceleration.ay() = 5;
   looper.limit(10.0f);
 
   looper();
   return 0;
 }
+
+std::random_device CMulateEntities::rd;
+std::uniform_real_distribution<DataType> CMulateEntities::position_d{0, 500};
+std::uniform_real_distribution<DataType> CMulateEntities::acceleration_d{0, 5};
+std::uniform_real_distribution<DataType> CMulateEntities::size_d{10, 50};
+std::uniform_real_distribution<DataType> CMulateEntities::velo_d{5, 15};
+std::uniform_int_distribution<int> CMulateEntities::idistribution{0, 255};
+std::uniform_int_distribution<char> CMulateEntities::str_d;
+
+void CMulateLoop::init()
+{
+  world()->random(*world());
+  entities()->init();
+}
+
+CMulateEntities::CMulateEntities(size_t entity_count) :
+  entity_count_{entity_count}
+{
+}
+
+std::string CMulateEntities::random_string(size_t len)
+{
+  std::mt19937 gen{rd()};
+  std::stringstream ss;
+  for (size_t i{0}; i < len; ++i)
+  {
+    ss << str_d(gen);
+  }
+  return ss.str();
+}
+
+void CMulateEntities::handle_collision(Entity op1, Entity op2)
+{
+}
+
+void CMulateEntities::init()
+{
+  for (size_t i{0}; i < entity_count_; ++i)
+  {
+    std::mt19937 gen{rd()};
+    auto id{add_entity(random_string(7))};
+
+    Position& pos = location(id);
+    pos.x() = position_d(gen);
+    pos.y() = position_d(gen);
+    pos.z() = position_d(gen);
+    Color& c = color(id);
+    c.red() = idistribution(gen);
+    c.blue() = idistribution(gen);
+    c.green() = idistribution(gen);
+    c.alpha() = 255;
+    Acceleration& accel = acceleration(id);
+    accel.ax() = acceleration_d(gen);
+    accel.ay() = acceleration_d(gen);
+    Velocity& velo = speed(id);
+    velo.dx() = velo_d(gen);
+    velo.dy() = velo_d(gen);
+
+    Size& sz = size(id);
+    sz.first = size_d(gen);
+    sz.second = size_d(gen);
+  }
+}
+
+
