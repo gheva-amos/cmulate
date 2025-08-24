@@ -55,6 +55,7 @@ public:
   void render(Render* renderer);
 
   virtual void handle_collision(Entity op1, Entity op2);
+  virtual void init();
 private:
   AtomTable atoms_;
   std::vector<Entity> entities_;

@@ -175,4 +175,8 @@ void EntityManager::handle_collision(Entity op1, Entity op2)
 {
 }
 
+void EntityManager::init()
+{
+}
+
 } // namespace
