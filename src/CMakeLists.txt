@@ -14,7 +14,7 @@ add_library(cmulate
     world.cpp
     )
 target_compile_options(cmulate PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
-target_link_libraries(cmulate PUBLIC dbg utils components systems entities event)
+target_link_libraries(cmulate PUBLIC dbg utils components systems entities event graphics render)
 
 add_executable(SFMLBuildTest sfml.cpp)
 target_compile_options(SFMLBuildTest PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
