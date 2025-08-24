@@ -28,7 +28,9 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 set(SDL_X11 ON  CACHE BOOL "" FORCE)
-set(SDL_WAYLAND OFF CACHE BOOL "" FORCE) # ON if you installed Wayland deps
+set(SDL_WAYLAND OFF CACHE BOOL "" FORCE)
+set(SDL_OPENGL   OFF CACHE BOOL "" FORCE)
+set(SDL_OPENGLES OFF CACHE BOOL "" FORCE)
 set(SDL_ALSA ON CACHE BOOL "" FORCE)
 set(SDL_PULSEAUDIO OFF CACHE BOOL "" FORCE)
 set(SDL_PIPEWIRE OFF CACHE BOOL "" FORCE)
@@ -46,6 +48,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(SDL2)
 
 add_subdirectory(src)
+add_subdirectory(experiments)
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
