@@ -1,4 +1,5 @@
 #include "entities/entity_manager.h"
+#include "graphics/rect.h"
 #include "debug.h"
 
 namespace cmulate
@@ -55,6 +56,11 @@ EntityManager::Size& EntityManager::size(Entity entity)
   return sizes_[entity];
 }
 
+Color& EntityManager::color(Entity entity)
+{
+  return colors_[entity];
+}
+
 Position EntityManager::location(Entity entity) const
 {
   return positions_.at(entity);
@@ -73,6 +79,11 @@ Acceleration EntityManager::acceleration(Entity entity) const
 EntityManager::Size EntityManager::size(Entity entity) const
 {
   return sizes_.at(entity);
+}
+
+Color EntityManager::color(Entity entity) const
+{
+  return colors_.at(entity);
 }
 
 bool EntityManager::move_entity(Entity entity, float dt, Position& ret)
@@ -138,6 +149,25 @@ void EntityManager::process_triggers()
     auto trigger{std::move(triggers_.front())};
     triggers_.pop();
     trigger->trigger();
+  }
+}
+
+void EntityManager::render(Render* renderer)
+{
+  for (auto entity : entities_)
+  {
+    if (colors_.count(entity) && positions_.count(entity) && sizes_.count(entity))
+    {
+      Position& pos{positions_[entity]};
+      Size size{sizes_[entity]};
+      Rect tmp{
+        static_cast<int>(pos.x()),
+        static_cast<int>(pos.y()),
+        static_cast<int>(size.first),
+        static_cast<int>(size.second)};
+      tmp.set_color(colors_[entity]);
+      renderer->add_rect(tmp);
+    }
   }
 }
 

@@ -5,6 +5,8 @@
 #include "components/velocity.h"
 #include "components/acceleration.h"
 #include "event/trigger.h"
+#include "graphics/color.h"
+#include "render/render.h"
 #include <queue>
 #include <vector>
 #include <unordered_map>
@@ -34,11 +36,13 @@ public:
   Velocity& speed(Entity entity);
   Acceleration& acceleration(Entity entity);
   Size& size(Entity entity);
+  Color& color(Entity entity);
 
   Position location(Entity entity) const;
   Velocity speed(Entity entity) const;
   Acceleration acceleration(Entity entity) const;
   Size size(Entity entity) const;
+  Color color(Entity entity) const;
 
   bool move_entity(Entity entity, float dt, Position& ret);
   bool speed_entity(Entity entity, float dt);
@@ -47,6 +51,9 @@ public:
 
   void add_trigger(std::unique_ptr<Trigger> trigger);
   void process_triggers();
+
+  void render(Render* renderer);
+
   virtual void handle_collision(Entity op1, Entity op2);
 private:
   AtomTable atoms_;
@@ -56,6 +63,7 @@ private:
   std::unordered_map<Entity, Velocity> velocities_;
   std::unordered_map<Entity, Acceleration> accelerations_;
   std::unordered_map<Entity, std::pair<DataType, DataType>> sizes_;
+  std::unordered_map<Entity, Color> colors_;
   std::queue<std::unique_ptr<Trigger>> triggers_;
 };
 
