@@ -29,6 +29,11 @@ SDLRender::SDLRender(const std::string& title) :
 
 void SDLRender::render()
 {
+  SDL_SetRenderDrawColor(renderer_, 100, 100, 100, 255);
+  SDL_RenderClear(renderer_);
+  render_entities();
+
+  SDL_RenderPresent(renderer_);
 }
 
 void SDLRender::render_line(int x1, int y1, int x2, int y2)
