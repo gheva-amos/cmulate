@@ -23,8 +23,11 @@ public:
   void tick();
   void limit(float time);
 
+  virtual void init();
+
   EntityManager::Entity add_entity(const std::string& name, Position p, Color c, std::pair<DataType, DataType>& size);
   std::unique_ptr<EntityManager>& entities();
+  std::unique_ptr<World>& world();
 private:
   std::unique_ptr<EntityManager> entities_;
   std::unique_ptr<LocationSystem> location_system_;

@@ -13,6 +13,7 @@ GameLoop::GameLoop(size_t width, size_t height, size_t resolution, DataType grav
   world_{std::make_unique<World>(width, height, resolution)},
   renderer_{std::make_unique<SDLRender>("CMulate")}
 {
+  init();
 }
 
 GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
@@ -23,6 +24,7 @@ GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
   world_{std::make_unique<World>(width, height, resolution)},
   renderer_{std::make_unique<SDLRender>("CMulate")}
 {
+  init();
 }
 
 void GameLoop::operator()()
@@ -75,6 +77,10 @@ void GameLoop::limit(float time)
   total_time_ = Duration(time);
 }
 
+void GameLoop::init()
+{
+}
+
 EntityManager::Entity GameLoop::add_entity(const std::string& name, Position p, Color c,
     std::pair<DataType, DataType>& size)
 {
@@ -89,6 +95,11 @@ EntityManager::Entity GameLoop::add_entity(const std::string& name, Position p, 
 std::unique_ptr<EntityManager>& GameLoop::entities()
 {
   return entities_;
+}
+
+std::unique_ptr<World>& GameLoop::world()
+{
+  return world_;
 }
 
 } // namespace
