@@ -17,5 +17,15 @@ void Event::notify()
   }
 }
 
+std::size_t EventHash::operator()(Event::EventReference r) const noexcept
+{
+  return std::hash<Event::EventId>{}(r.get().id());
+}
+
+bool EventCompare::operator()(Event::EventReference a, Event::EventReference b) const noexcept
+{
+  return a.get().id() == b.get().id();
+}
+
 } // namespace
 
