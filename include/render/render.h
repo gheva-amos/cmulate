@@ -18,6 +18,7 @@ public:
   virtual void set_color(int r, int g, int b, int alpha) = 0;
 
   virtual void render() = 0;
+  virtual bool go_on() = 0;
 
   void add_line(int x1, int y1, int x2, int y2);
   void add_rect(int x1, int y1, int w, int h);

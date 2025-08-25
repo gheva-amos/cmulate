@@ -36,6 +36,19 @@ void SDLRender::render()
   SDL_RenderPresent(renderer_);
 }
 
+bool SDLRender::go_on()
+{
+  SDL_Event event;
+  while (SDL_PollEvent(&event))
+  {
+    if (event.type == SDL_QUIT)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 void SDLRender::render_line(int x1, int y1, int x2, int y2)
 {
   SDL_RenderDrawLine(renderer_, x1, y1, x2, y2);

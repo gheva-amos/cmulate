@@ -14,6 +14,7 @@ public:
   SDLRender(const std::string& title);
   virtual ~SDLRender();
   virtual void render() override;
+  virtual bool go_on() override;
   virtual void render_line(int x1, int y1, int x2, int y2) override;
   virtual void render_rect(int x1, int y1, int w, int h) override;
   virtual void set_color(int r, int g, int b, int alpha) override;

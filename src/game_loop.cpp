@@ -30,7 +30,7 @@ GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
 void GameLoop::operator()()
 {
   last_ = start_ = Clock::now();
-  while (true)
+  while (renderer_->go_on())
   {
     tick();
     if (limited_)
