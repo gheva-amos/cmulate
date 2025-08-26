@@ -67,6 +67,7 @@ void GameLoop::tick()
     }
   }
   entities_->process_triggers();
+  entities_->process_events();
   entities_->render(renderer_.get());
   renderer_->render();
   last_ = now_;
