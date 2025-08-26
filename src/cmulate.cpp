@@ -10,6 +10,12 @@
 
 using namespace cmulate;
 
+class CollisionFunctor : public EventFunctor
+{
+public:
+  virtual void operator()(std::vector<std::any>& args) override;
+};
+
 class CMulateLoop : public GameLoop
 {
 public:
@@ -26,7 +32,6 @@ class CMulateEntities : public EntityManager
 {
 public:
   CMulateEntities(size_t entity_count);
-  virtual void handle_collision(Entity op1, Entity op2) override;
   virtual void init() override;
 private:
   size_t entity_count_;
@@ -38,6 +43,7 @@ private:
   static std::uniform_real_distribution<DataType> velo_d;
   static std::uniform_int_distribution<int> idistribution;
   static std::uniform_int_distribution<char> str_d;
+  CollisionFunctor collision_handler_;
 };
 
 int main()
@@ -86,13 +92,18 @@ std::string CMulateEntities::random_string(size_t len)
   return ss.str();
 }
 
-void CMulateEntities::handle_collision(Entity op1, Entity op2)
+void CollisionFunctor::operator()(std::vector<std::any>& args)
 {
-  DBG_MSG("Collision ") << entity_name(op1) << ' ' << entity_name(op2) << std::endl;
+  EntityManager* entities = std::any_cast<EntityManager*>(args[0]);
+  EntityManager::Entity op1 = std::any_cast<EntityManager::Entity>(args[1]);
+  EntityManager::Entity op2 = std::any_cast<EntityManager::Entity>(args[2]);
+
+  DBG_MSG("Collision ") << entities->entity_name(op1) << ' ' << entities->entity_name(op2) << std::endl;
 }
 
 void CMulateEntities::init()
 {
+  add_event_listener(EntityEvent::Type::collision, collision_handler_);
   for (size_t i{0}; i < entity_count_; ++i)
   {
     std::mt19937 gen{rd()};
