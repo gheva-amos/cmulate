@@ -10,6 +10,13 @@
 
 using namespace cmulate;
 
+size_t rand_up_to(int limit)
+{
+  static thread_local std::mt19937 gen(std::random_device{}());
+  std::uniform_int_distribution<size_t> dist(1, limit);
+  return dist(gen);
+}
+
 class CollisionFunctor : public EventFunctor
 {
 public:
@@ -19,7 +26,11 @@ public:
 class MotionFunctor : public EventFunctor
 {
 public:
+  MotionFunctor(size_t width, size_t height);
   virtual void operator()(std::vector<std::any>& args) override;
+private:
+  size_t width_;
+  size_t height_;
 };
 
 class CMulateLoop : public GameLoop
@@ -37,7 +48,7 @@ private:
 class CMulateEntities : public EntityManager
 {
 public:
-  CMulateEntities(size_t entity_count);
+  CMulateEntities(size_t entity_count, size_t width, size_t height);
   virtual void init() override;
 private:
   size_t entity_count_;
@@ -55,10 +66,12 @@ private:
 
 int main()
 {
-  CMulateLoop loop(std::make_unique<CMulateEntities>(4), 500, 500, 2, 3.1);
+  size_t width{500};
+  size_t height{500};
+  CMulateLoop loop(std::make_unique<CMulateEntities>(12, width, height), width, height, 2, 3.1);
   GameLoop& looper{loop};
 
-  looper.limit(10.0f);
+  looper.limit(100.0f);
 
   looper();
   return 0;
@@ -83,9 +96,10 @@ void CMulateLoop::init()
   }
 }
 
-CMulateEntities::CMulateEntities(size_t entity_count) :
+CMulateEntities::CMulateEntities(size_t entity_count, size_t width, size_t height) :
   EntityManager(),
-  entity_count_{entity_count}
+  entity_count_{entity_count},
+  motion_handler_{width, height}
 {
 }
 
@@ -110,8 +124,31 @@ void CollisionFunctor::operator()(std::vector<std::any>& args)
   EntityManager::Entity op1 = std::any_cast<EntityManager::Entity>(args[1]);
   EntityManager::Entity op2 = std::any_cast<EntityManager::Entity>(args[2]);
   
+  EntityManager::Entity remainig{op1};
+  Color c;
+  if (entities->bigger(op1, op2))
+  {
+    c = entities->color(op2);
+    entities->remve_entity(op2);
+  }
+  else
+  {
+    c = entities->color(op1);
+    remainig = op2;
+    entities->remve_entity(op1);
+  }
 
-  DBG_MSG("Collision ") << entities->entity_name(op1) << ' ' << entities->entity_name(op2) << std::endl;
+  entities->color(remainig).red() += c.red();
+  entities->color(remainig).green() += c.green();
+  entities->color(remainig).blue() += c.blue();
+
+  entities->speed(remainig).dx() *= -1;
+  entities->speed(remainig).dy() *= -1;
+}
+
+MotionFunctor::MotionFunctor(size_t w, size_t h) :
+  width_{w}, height_{h}
+{
 }
 
 void MotionFunctor::operator()(std::vector<std::any>& args)
@@ -123,7 +160,7 @@ void MotionFunctor::operator()(std::vector<std::any>& args)
   DataType y = std::any_cast<DataType>(args[4]);
   if (world->out_of_this(x, y))
   {
-    Position p{1, 1, 0.0};
+    Position p{rand_up_to(width_), rand_up_to(height_), 0.0};
     entities->move_entity(entity, p);
   }
   else
