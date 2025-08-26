@@ -29,6 +29,7 @@ public:
   virtual ~EntityManager() = default;
   const std::string& entity_name(Entity entity);
   Entity add_entity(const std::string& name);
+  void remve_entity(Entity entity);
   Entity operator[](size_t index) const;
   Entity at(size_t index) const;
 
@@ -64,6 +65,8 @@ public:
   void add_motion_event(std::vector<std::any>& args);
   void add_event_listener(EntityEvent::Type type, EventFunctor& functor);
   void process_events();
+
+  bool bigger(Entity one, Entity other);
 private:
   void init_events();
   AtomTable atoms_;

@@ -29,6 +29,17 @@ EntityManager::Entity EntityManager::add_entity(const std::string& name)
   return entity;
 }
 
+void EntityManager::remve_entity(Entity entity)
+{
+  std::lock_guard lock{lock_};
+  entities_.erase(entity);
+  positions_.erase(entity);
+  velocities_.erase(entity);
+  accelerations_.erase(entity);
+  sizes_.erase(entity);
+  colors_.erase(entity);
+}
+
 EntityManager::Entity EntityManager::operator[](size_t index) const
 {
   return at(index);
@@ -119,6 +130,7 @@ void EntityManager::move_entity(Entity entity, Position new_position)
 
 bool EntityManager::speed_entity(Entity entity, float dt)
 {
+  std::lock_guard lock{lock_};
   if (accelerations().count(entity))
   {
     Acceleration& accel{acceleration(entity)};
@@ -132,6 +144,7 @@ bool EntityManager::speed_entity(Entity entity, float dt)
 
 bool EntityManager::collide(Entity entity, Entity other)
 {
+  std::lock_guard lock{lock_};
   if (sizes_.count(entity) && sizes_.count(other))
   {
     Position p1{positions_[entity]}, p2{positions_[other]};
@@ -146,6 +159,7 @@ bool EntityManager::collide(Entity entity, Entity other)
 
 void EntityManager::apply_gravity(DataType gravity, DataType dt)
 {
+  std::lock_guard lock{lock_};
   for (auto& [_, accel] : accelerations_)
   {
     accel.ay() += gravity * dt;
@@ -227,6 +241,15 @@ void EntityManager::process_events()
   {
     event.get().notify();
   }
+}
+
+bool EntityManager::bigger(Entity one, Entity other)
+{
+  Size ls{size(one)}, rs{size(other)};
+
+  DataType ones_size{ls.first * ls.second};
+  DataType others_size{rs.first * rs.second};
+  return ones_size > others_size;
 }
 
 } // namespace
