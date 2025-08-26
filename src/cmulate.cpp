@@ -16,6 +16,12 @@ public:
   virtual void operator()(std::vector<std::any>& args) override;
 };
 
+class MotionFunctor : public EventFunctor
+{
+public:
+  virtual void operator()(std::vector<std::any>& args) override;
+};
+
 class CMulateLoop : public GameLoop
 {
 public:
@@ -44,11 +50,12 @@ private:
   static std::uniform_int_distribution<int> idistribution;
   static std::uniform_int_distribution<char> str_d;
   CollisionFunctor collision_handler_;
+  MotionFunctor motion_handler_;
 };
 
 int main()
 {
-  CMulateLoop loop(std::make_unique<CMulateEntities>(12), 10, 10, 2, 3.1);
+  CMulateLoop loop(std::make_unique<CMulateEntities>(4), 500, 500, 2, 3.1);
   GameLoop& looper{loop};
 
   looper.limit(10.0f);
@@ -69,6 +76,11 @@ void CMulateLoop::init()
 {
   world()->random(*world());
   entities()->init();
+  for (auto entity : entities()->entities())
+  {
+    Position p{entities()->location(entity)};
+    world()->add_entity(entity, p.x(), p.y());
+  }
 }
 
 CMulateEntities::CMulateEntities(size_t entity_count) :
@@ -97,13 +109,33 @@ void CollisionFunctor::operator()(std::vector<std::any>& args)
   EntityManager* entities = std::any_cast<EntityManager*>(args[0]);
   EntityManager::Entity op1 = std::any_cast<EntityManager::Entity>(args[1]);
   EntityManager::Entity op2 = std::any_cast<EntityManager::Entity>(args[2]);
+  
 
   DBG_MSG("Collision ") << entities->entity_name(op1) << ' ' << entities->entity_name(op2) << std::endl;
+}
+
+void MotionFunctor::operator()(std::vector<std::any>& args)
+{
+  EntityManager* entities = std::any_cast<EntityManager*>(args[0]);
+  World* world = std::any_cast<World*>(args[1]);
+  EntityManager::Entity entity = std::any_cast<EntityManager::Entity>(args[2]);
+  DataType x = std::any_cast<DataType>(args[3]);
+  DataType y = std::any_cast<DataType>(args[4]);
+  if (world->out_of_this(x, y))
+  {
+    Position p{1, 1, 0.0};
+    entities->move_entity(entity, p);
+  }
+  else
+  {
+    world->move_entity(entity, x, y);
+  }
 }
 
 void CMulateEntities::init()
 {
   add_event_listener(EntityEvent::Type::collision, collision_handler_);
+  add_event_listener(EntityEvent::Type::motion, motion_handler_);
   for (size_t i{0}; i < entity_count_; ++i)
   {
     std::mt19937 gen{rd()};
