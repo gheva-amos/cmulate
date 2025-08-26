@@ -66,6 +66,7 @@ void CMulateLoop::init()
 }
 
 CMulateEntities::CMulateEntities(size_t entity_count) :
+  EntityManager(),
   entity_count_{entity_count}
 {
 }
