@@ -13,8 +13,27 @@ void Event::notify()
 {
   for (auto listener : listeners_)
   {
-    listener.get()(id());
+    for (auto args : events_)
+    {
+      listener.get()(args);
+    }
   }
+  events_.clear();
+}
+
+Event::ListnerSet::iterator Event::begin()
+{
+  return listeners_.begin();
+}
+
+Event::ListnerSet::iterator Event::end()
+{
+  return listeners_.end();
+}
+
+void Event::push_args(std::vector<std::any>& args)
+{
+  events_.push_back(args);
 }
 
 std::size_t EventHash::operator()(Event::EventReference r) const noexcept
