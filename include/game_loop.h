@@ -26,7 +26,7 @@ public:
   void tick();
   void limit(float time);
 
-  virtual void init();
+  virtual void init() = 0;
 
   EntityManager::Entity add_entity(const std::string& name, Position p, Color c, std::pair<DataType, DataType>& size);
   std::unique_ptr<EntityManager>& entities();

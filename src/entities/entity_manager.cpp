@@ -8,7 +8,8 @@ namespace cmulate
 
 EntityManager::EntityManager() :
   atoms_{AtomTable{}},
-  collision_event_{EntityEvent::Type::collision}
+  collision_event_{EntityEvent::Type::collision},
+  motion_event_{EntityEvent::Type::motion}
 {
   init_events();
 }
@@ -97,6 +98,7 @@ bool EntityManager::move_entity(Entity entity, float dt, Position& ret)
 {
   if (velocities_.count(entity) && positions_.count(entity))
   {
+    std::lock_guard lock{lock_};
     Position& pos{location(entity)};
     Velocity& vel{speed(entity)};
     pos.x() += vel.dx() * dt;
@@ -107,6 +109,12 @@ bool EntityManager::move_entity(Entity entity, float dt, Position& ret)
     return true;
   }
   return false;
+}
+
+void EntityManager::move_entity(Entity entity, Position new_position)
+{
+  std::lock_guard lock{lock_};
+  location(entity) = new_position;
 }
 
 bool EntityManager::speed_entity(Entity entity, float dt)
@@ -194,6 +202,12 @@ void EntityManager::init()
 void EntityManager::init_events()
 {
   events_.insert(collision_event_);
+  events_.insert(motion_event_);
+}
+
+void EntityManager::add_motion_event(std::vector<std::any>& args)
+{
+  motion_event_.push_args(args);
 }
 
 void EntityManager::add_event_listener(EntityEvent::Type type, EventFunctor& functor)

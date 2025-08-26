@@ -13,6 +13,7 @@ public:
   enum class Type
   {
     collision,
+    motion,
     unknown
   };
   EntityEvent(Type t);
