@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 #include "event/functor.h"
+#include "event/event_vector.h"
 
 namespace cmulate
 {
@@ -30,7 +31,7 @@ protected:
 private:
   ListnerSet listeners_;
   std::vector<size_t> entity_args_;
-  std::vector<std::vector<std::any>> events_;
+  EventVector events_;
 };
 
 struct EventCompare
