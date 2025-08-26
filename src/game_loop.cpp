@@ -11,9 +11,8 @@ GameLoop::GameLoop(size_t width, size_t height, size_t resolution, DataType grav
   location_system_{std::make_unique<LocationSystem>()},
   physics_system_{std::make_unique<PhysicsSystem>(gravity)},
   world_{std::make_unique<World>(width, height, resolution)},
-  renderer_{std::make_unique<SDLRender>("CMulate")}
+  renderer_{std::make_unique<SDLRender>(width, height, "CMulate")}
 {
-  init();
 }
 
 GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
@@ -22,9 +21,8 @@ GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
   location_system_{std::make_unique<LocationSystem>()},
   physics_system_{std::make_unique<PhysicsSystem>(gravity)},
   world_{std::make_unique<World>(width, height, resolution)},
-  renderer_{std::make_unique<SDLRender>("CMulate")}
+  renderer_{std::make_unique<SDLRender>(width, height, "CMulate")}
 {
-  init();
 }
 
 GameLoop::~GameLoop()
@@ -89,7 +87,6 @@ void GameLoop::tick()
     }
   }
   entities_->process_triggers();
-  //entities_->process_events();
   entities_->render(renderer_.get());
   renderer_->render();
   last_ = now_;
@@ -99,10 +96,6 @@ void GameLoop::limit(float time)
 {
   limited_ = true;
   total_time_ = Duration(time);
-}
-
-void GameLoop::init()
-{
 }
 
 EntityManager::Entity GameLoop::add_entity(const std::string& name, Position p, Color c,
