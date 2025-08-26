@@ -3,6 +3,11 @@
 namespace cmulate
 {
 
+Render::Render(size_t width, size_t height) :
+  width_{width}, height_{height}
+{
+}
+
 void Render::add_line(int x1, int y1, int x2, int y2)
 {
   lines_.emplace_back(x1, y1, x2, y2);

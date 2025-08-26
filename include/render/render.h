@@ -12,6 +12,7 @@ namespace cmulate
 class Render
 {
 public:
+  Render(size_t width, size_t height);
   virtual ~Render() = default;
   virtual void render_line(int x1, int y1, int x2, int y2) = 0;
   virtual void render_rect(int x1, int y1, int w, int h) = 0;
@@ -25,6 +26,8 @@ public:
   void add_rect(Rect& r);
 protected:
   void render_entities();
+  size_t width_;
+  size_t height_;
 private:
   std::vector<Line> lines_;
   std::vector<Rect> rects_;

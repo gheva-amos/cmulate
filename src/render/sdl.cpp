@@ -4,8 +4,8 @@
 namespace cmulate
 {
 
-SDLRender::SDLRender(const std::string& title) :
-  window_{nullptr}, renderer_{nullptr}
+SDLRender::SDLRender(size_t width, size_t height, const std::string& title) :
+  Render{width, height}, window_{nullptr}, renderer_{nullptr}
 {
   SDL_SetHint(SDL_HINT_RENDER_DRIVER, "software");
   if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -13,7 +13,8 @@ SDLRender::SDLRender(const std::string& title) :
     DBG_MSG("SDL error ") << SDL_GetError() << std::endl;
     throw std::runtime_error("Could not init SDL");
   }
-  window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 500, 0);
+  window_ = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+      width_, height_, 0);
   if (!window_)
   {
     DBG_MSG("SDL error ") << SDL_GetError() << std::endl;

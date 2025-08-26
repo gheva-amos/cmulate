@@ -11,7 +11,7 @@ namespace cmulate
 class SDLRender : public Render
 {
 public:
-  SDLRender(const std::string& title);
+  SDLRender(size_t width, size_t height, const std::string& title);
   virtual ~SDLRender();
   virtual void render() override;
   virtual bool go_on() override;
