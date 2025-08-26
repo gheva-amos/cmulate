@@ -10,7 +10,8 @@ void LocationSystem::update(std::unique_ptr<EntityManager>& entities,
   Position tmp;
   if (entities->move_entity(entity, delta_time, tmp))
   {
-    world->move_entity(entity, tmp.x(), tmp.y());
+    std::vector<std::any> args {entities.get(), world.get(), entity, tmp.x(), tmp.y()};
+    entities->add_motion_event(args);
   }
 }
 
