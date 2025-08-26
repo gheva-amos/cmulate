@@ -77,5 +77,19 @@ void World::init()
 {
 }
 
+bool World::out_of_this(Position& p)
+{
+  return out_of_this(p.x(), p.y());
+}
+
+bool World::out_of_this(DataType x, DataType y)
+{
+  if ((x >= width_ || x <= 0) || (y >= height_ || y <= 0))
+  {
+    return true;
+  }
+  return false;
+}
+
 } // namespace
 

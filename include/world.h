@@ -2,6 +2,7 @@
 #define CMULATE_WORLD_H__
 #include <vector>
 #include "components/tile.h"
+#include "components/position.h"
 #include "utils/grid.h"
 #include "data_types.h"
 #include <random>
@@ -23,6 +24,8 @@ public:
   void move_entity(EntityManager::Entity entity, DataType x, DataType y);
   void add_entity(EntityManager::Entity entity, DataType x, DataType y);
   virtual void init();
+  bool out_of_this(Position& p);
+  bool out_of_this(DataType x, DataType y);
 private:
   size_t width_;
   size_t height_;
