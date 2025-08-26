@@ -5,5 +5,6 @@ add_library(event
     event.cpp
     functor.cpp
     trigger.cpp
+    entity_event.cpp
     )
 target_compile_options(event PRIVATE -Wall -Wextra -pedantic -Wno-enum-compare -Wno-maybe-uninitialized -Wno-uninitialized -Wno-unused-parameter)
