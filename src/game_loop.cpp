@@ -54,15 +54,16 @@ void GameLoop::tick()
   world_->update(delta_time);
   physics_system_->apply_gravity(entities_, delta_time);
   size_t j{0};
-  for (auto entity : entities_->entities())
+  std::vector<EntityManager::Entity> entities{entities_->entities().begin(), entities_->entities().end()};
+  for (auto entity : entities)
   {
     DBG_MSG("looping over entitie ") << entity << std::endl;
     physics_system_->update(entities_, entity, delta_time);
     location_system_->update(entities_, world_, entity, delta_time);
     ++j;
-    for (size_t k{j}; k < entities_->entities().size(); ++k)
+    for (size_t k{j}; k < entities.size(); ++k)
     {
-      physics_system_->handle_collisions(entities_, entity, entities_->at(k));
+      physics_system_->handle_collisions(entities_, entity, entities.at(k));
     }
   }
   entities_->process_triggers();
