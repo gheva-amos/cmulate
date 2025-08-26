@@ -4,6 +4,7 @@
 #include "components/position.h"
 #include "components/velocity.h"
 #include "components/acceleration.h"
+#include "event/entity_event.h"
 #include "event/event.h"
 #include "event/trigger.h"
 #include "graphics/color.h"
@@ -57,17 +58,21 @@ public:
 
   virtual void handle_collision(Entity op1, Entity op2);
   virtual void init();
+
+  void add_event_listener(EntityEvent::Type type, EventFunctor& functor);
+  void process_events();
 private:
   void init_events();
   AtomTable atoms_;
   std::unordered_set<Entity> entities_;
-  std::unordered_set<Event::EventReference, EventCompare, EventHash> events_;
+  std::unordered_set<EntityEvent::EventReference, EventHash, EventCompare> events_;
   std::unordered_map<Entity, Position> positions_;
   std::unordered_map<Entity, Velocity> velocities_;
   std::unordered_map<Entity, Acceleration> accelerations_;
   std::unordered_map<Entity, std::pair<DataType, DataType>> sizes_;
   std::unordered_map<Entity, Color> colors_;
   std::queue<std::unique_ptr<Trigger>> triggers_;
+  EntityEvent collision_event_;
 };
 
 } // namespace

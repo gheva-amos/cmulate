@@ -7,8 +7,10 @@ namespace cmulate
 {
 
 EntityManager::EntityManager() :
-  atoms_{AtomTable{}}
+  atoms_{AtomTable{}},
+  collision_event_{EntityEvent::Type::collision}
 {
+  init_events();
 }
 
 const std::string& EntityManager::entity_name(Entity entity)
@@ -178,6 +180,11 @@ void EntityManager::render(Render* renderer)
 
 void EntityManager::handle_collision(Entity op1, Entity op2)
 {
+  std::vector<std::any> args;
+  args.push_back(this);
+  args.push_back(op1);
+  args.push_back(op2);
+  collision_event_.push_args(args);
 }
 
 void EntityManager::init()
@@ -186,6 +193,26 @@ void EntityManager::init()
 
 void EntityManager::init_events()
 {
+  events_.insert(collision_event_);
+}
+
+void EntityManager::add_event_listener(EntityEvent::Type type, EventFunctor& functor)
+{
+  auto iter = std::find_if(events_.begin(), events_.end(),
+      [&](EntityEvent& ev) { return ev.id() == static_cast<size_t>(type);});
+
+  if (iter != events_.end())
+  {
+    iter->get().add_listener(functor);
+  }
+}
+
+void EntityManager::process_events()
+{
+  for (auto event : events_)
+  {
+    event.get().notify();
+  }
 }
 
 } // namespace

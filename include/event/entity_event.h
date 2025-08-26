@@ -9,6 +9,7 @@ namespace cmulate
 class EntityEvent : public Event
 {
 public:
+  using EventReference = std::reference_wrapper<EntityEvent>;
   enum class Type
   {
     collision,
