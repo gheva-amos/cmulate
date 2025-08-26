@@ -4,10 +4,14 @@
 #include <cstddef>
 #include <string>
 #include <functional>
+#include <memory>
+#include <any>
+#include <vector>
 
 namespace cmulate
 {
 
+class EntityManager;
 class Functor
 {
 public:
@@ -31,7 +35,7 @@ struct FunctorHasher
 class EventFunctor : public Functor
 {
 public:
-  virtual void operator()(size_t id) = 0;
+  virtual void operator()(std::vector<std::any>& args) = 0;
   virtual std::string hash_seed() const override;
 };
 
