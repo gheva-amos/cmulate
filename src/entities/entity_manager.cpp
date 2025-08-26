@@ -1,5 +1,6 @@
 #include "entities/entity_manager.h"
 #include "graphics/rect.h"
+#include "event/entity_event.h"
 #include "debug.h"
 
 namespace cmulate
@@ -18,22 +19,26 @@ const std::string& EntityManager::entity_name(Entity entity)
 EntityManager::Entity EntityManager::add_entity(const std::string& name)
 {
   Entity entity{atoms_.intern(name)};
-  if (all_entities_.find(entity) == all_entities_.end())
+  if (entities_.find(entity) == entities_.end())
   {
-    all_entities_.insert(entity);
-    entities_.push_back(entity);
+    entities_.insert(entity);
   }
   return entity;
 }
 
 EntityManager::Entity EntityManager::operator[](size_t index) const
 {
-  return entities_[index];
+  return at(index);
 }
 
 EntityManager::Entity EntityManager::at(size_t index) const
 {
-  return entities_[index];
+  auto iter = entities_.find(index);
+  if (iter == entities_.end())
+  {
+    throw std::runtime_error("Searching for a non existing entity");
+  }
+  return *iter;
 }
 
 Position& EntityManager::location(Entity entity)
@@ -176,6 +181,10 @@ void EntityManager::handle_collision(Entity op1, Entity op2)
 }
 
 void EntityManager::init()
+{
+}
+
+void EntityManager::init_events()
 {
 }
 

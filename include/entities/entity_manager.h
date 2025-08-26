@@ -4,6 +4,7 @@
 #include "components/position.h"
 #include "components/velocity.h"
 #include "components/acceleration.h"
+#include "event/event.h"
 #include "event/trigger.h"
 #include "graphics/color.h"
 #include "render/render.h"
@@ -29,7 +30,7 @@ public:
   Entity operator[](size_t index) const;
   Entity at(size_t index) const;
 
-  std::vector<Entity>& entities() { return entities_; }
+  std::unordered_set<Entity>& entities() { return entities_; }
   std::unordered_map<Entity, Position>& positions() { return positions_; }
   std::unordered_map<Entity, Acceleration>& accelerations() { return accelerations_; }
   Position& location(Entity entity);
@@ -57,9 +58,10 @@ public:
   virtual void handle_collision(Entity op1, Entity op2);
   virtual void init();
 private:
+  void init_events();
   AtomTable atoms_;
-  std::vector<Entity> entities_;
-  std::unordered_set<Entity> all_entities_;
+  std::unordered_set<Entity> entities_;
+  std::unordered_set<Event::EventReference, EventCompare, EventHash> events_;
   std::unordered_map<Entity, Position> positions_;
   std::unordered_map<Entity, Velocity> velocities_;
   std::unordered_map<Entity, Acceleration> accelerations_;
