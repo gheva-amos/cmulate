@@ -27,8 +27,23 @@ GameLoop::GameLoop(std::unique_ptr<EntityManager> em,
   init();
 }
 
+GameLoop::~GameLoop()
+{
+  if (events_running_.exchange(false))
+  {
+    if (event_processor_.joinable())
+    {
+      event_processor_.join();
+    }
+  }
+}
+
 void GameLoop::operator()()
 {
+  events_running_.store(true, std::memory_order_release);
+  event_processor_ = std::thread([this] { 
+      event_processor();
+      });
   last_ = start_ = Clock::now();
   while (renderer_->go_on())
   {
@@ -43,6 +58,13 @@ void GameLoop::operator()()
     }
     auto wake = now_ + std::chrono::milliseconds(16);
     std::this_thread::sleep_until(wake);
+  }
+  if (events_running_.exchange(false))
+  {
+    if (event_processor_.joinable())
+    {
+      event_processor_.join();
+    }
   }
 }
 
@@ -67,7 +89,7 @@ void GameLoop::tick()
     }
   }
   entities_->process_triggers();
-  entities_->process_events();
+  //entities_->process_events();
   entities_->render(renderer_.get());
   renderer_->render();
   last_ = now_;
@@ -102,6 +124,14 @@ std::unique_ptr<EntityManager>& GameLoop::entities()
 std::unique_ptr<World>& GameLoop::world()
 {
   return world_;
+}
+
+void GameLoop::event_processor()
+{
+  while (events_running_.load(std::memory_order_acquire))
+  {
+    entities_->process_events();
+  }
 }
 
 } // namespace

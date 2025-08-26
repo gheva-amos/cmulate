@@ -7,6 +7,8 @@
 #include "world.h"
 #include <chrono>
 #include <memory>
+#include <atomic>
+#include <thread>
 
 namespace cmulate
 {
@@ -19,6 +21,7 @@ public:
   using Duration = std::chrono::duration<float>;
   GameLoop(size_t width, size_t height, size_t resolution, DataType gravity=9.81f);
   GameLoop(std::unique_ptr<EntityManager> em, size_t width, size_t height, size_t resolution, DataType gravity=9.81f);
+  virtual ~GameLoop();
   void operator()();
   void tick();
   void limit(float time);
@@ -28,6 +31,7 @@ public:
   EntityManager::Entity add_entity(const std::string& name, Position p, Color c, std::pair<DataType, DataType>& size);
   std::unique_ptr<EntityManager>& entities();
   std::unique_ptr<World>& world();
+  void event_processor();
 private:
   std::unique_ptr<EntityManager> entities_;
   std::unique_ptr<LocationSystem> location_system_;
@@ -38,6 +42,8 @@ private:
   Tick last_;
   Tick now_;
 
+  std::atomic<bool> events_running_;
+  std::thread event_processor_;
   Duration total_time_;
   bool limited_{false};
 };
